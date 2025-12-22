@@ -1,0 +1,1134 @@
+<div class="container-fluid">
+  <div class="row relative">
+    <div class="loaderOnPage" *ngIf="isLoading"></div>
+    <!-- left Panel Start --->
+    <div class="col-md-5 p-2">
+      <div
+        class="bg-white p-4"
+        style="height: calc(100vh - 75px); overflow-y: auto"
+      >
+        <form class="contact-form" #form="ngForm">
+          <div class="row form-group">
+            <div class="col-sm-2 d-flex align-items-center">
+              <label class="label m-0" for="message">Date</label>
+            </div>
+            <div class="col-sm-10">
+              <input
+                id="Date"
+                autocomplete="off"
+                class="input-text"
+                type="date"
+                placeholder="Page No."
+                required=""
+                (ngModelChange)="onDateChange($event)"
+                [(ngModel)]="selectedDate"
+                name="selectedDate"
+              />
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-2 d-flex">
+              <label class="label mt-1" for="message">Publication</label>
+            </div>
+            <div class="col-sm-10">
+              <input
+                id="Date"
+                autocomplete="off"
+                class="input-text"
+                type="text"
+                placeholder="Enter Publication Name"
+                required=""
+                [formControl]="publicationControl"
+              />
+              <select
+                class="input-text mt-3"
+                size="8"
+                aria-label="Size 8 select example"
+                [(ngModel)]="selectedPublication"
+                (change)="onPublicationChange($event)"
+                name="selectedPublication"
+              >
+                <option
+                  *ngFor="let publication of filteredPublications"
+                  [value]="
+                    publication.PublicationTitle + ' ' + publication.Edition
+                  "
+                >
+                  {{ publication.PublicationTitle }} {{ publication.Edition }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-2 d-flex align-items-center">
+              <label class="label" for="message">No. of Articles</label>
+            </div>
+            <div class="col-sm-10">
+              <label class="label infolabel mb-0" for="name">{{
+                articlesPageNumber[0]?.TotalArticles || 0
+              }}</label>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-2 d-flex">
+              <label class="label mt-1" for="message">Select Page</label>
+            </div>
+            <div class="col-sm-10">
+              <select
+                class="input-text"
+                size="8"
+                aria-label="Size 8 select example"
+                [(ngModel)]="selectedPageNumber"
+                (change)="onPageNumberChange($event)"
+                name="selectedPageNumber"
+              >
+                <option
+                  *ngFor="let article of articlesPageNumber"
+                  [value]="article.Page_Number"
+                >
+                  {{ article.Page_Number }} ({{ article.ArticlesOnPage }})
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-2 d-flex">
+              <label class="label mt-1" for="message">Select Title</label>
+            </div>
+            <div class="col-sm-10">
+              <input
+                id="Date"
+                autocomplete="off"
+                class="input-text"
+                type="text"
+                placeholder="Enter Title"
+                required=""
+                [formControl]="titleControl"
+                (input)="filterTitle()"
+              />
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-12">
+              <select
+                class="input-text"
+                size="8"
+                aria-label="Size 8 select example"
+                name="selectedArticleId"
+                [(ngModel)]="selectedArticleId"
+                (change)="onArticleIdChange($event)"
+                #selectedArticleIdControl="ngModel"
+                required=""
+              >
+                <option
+                  *ngFor="let articleTitle of filterArticleTitles"
+                  [value]="articleTitle.ArticleID"
+                >
+                  {{ articleTitle?.ArticleTitle || "" }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-12 d-flex justify-content-end">
+              <input
+                class="submit-btn"
+                type="submit"
+                [disabled]="isArticleIdSelected"
+                value="Get Details"
+                [ngClass]="{ 'disabled-btn': isArticleIdSelected }"
+                (click)="getFullArticle()"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- left Panel End --->
+    <!-- Right Panel Start --->
+    <div class="col-md-7 p-2" *ngIf="showdetails">
+      <div
+        class="bg-white p-4 contact-form"
+        style="height: calc(100vh - 75px); overflow-y: auto"
+      >
+        <div class="bg-light p-2 mb-2">
+          <h1 class="m-0" style="font-size: 1.2em; color: #2262a0">
+            Article Details
+          </h1>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-2 d-flex align-items-center">
+            <label class="label m-0" for="message">Title</label>
+          </div>
+          <div class="col-sm-10">
+            <input
+              id="Date"
+              class="input-text"
+              autocomplete="off"
+              type="text"
+              placeholder=""
+              required=""
+              [value]="article?.ArticleTitle || ''"
+              (input)="onTitleChange($event)"
+            />
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-2 d-flex align-items-center">
+            <label class="label m-0" for="message">Subtitle</label>
+          </div>
+          <div class="col-sm-10">
+            <input
+              id="Date"
+              autocomplete="off"
+              class="input-text"
+              type="text"
+              placeholder=""
+              required=""
+              [value]="article?.Sub_Title || ''"
+              (input)="onSubTitleChange($event)"
+            />
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-10 d-flex gap-1">
+            <!-- <button class="view-btn m-1" (click)="viewArticle()">
+              View Article
+            </button> -->
+            <button type="button"  class="view-btn m-1" (click)="viewArticle()" data-bs-toggle="modal" data-bs-target="#viewimage">
+              View Article
+            </button>
+            <button class="view-btn m-1" (click)="viewPDF()">PDF</button>
+            <button class="view-btn m-1" (click)="sendMail()">Send Mail</button>
+          </div>
+        </div>
+        <!-- <div class="row form-group">
+          <div class="col-sm-2 d-flex align-items-center">
+          <label class="label m-0" for="message">Subtitle</label>
+          </div>
+          <div class="col-sm-10">
+            <input id="Date" class="input-text" type="text" placeholder="Companies" required="">
+          </div>
+        </div> -->
+        <div class="row form-group">
+          <div class="col-sm-2 d-flex align-items-center">
+            <label class="label m-0" for="message">Publication</label>
+          </div>
+          <div class="col-sm-10">
+            <label class="label infolabel mb-0" for="name">{{
+              article?.PublicationTitle || ""
+            }}</label>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-2 d-flex align-items-center">
+            <label class="label m-0" for="message">Text</label>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-12 position-relative">
+            <!-- <textarea rows="8" class="input-text"></textarea> -->
+            <div
+              id="highlightedText"
+              class="highlight-text input-text1"
+              [innerHTML]="highlightedText"
+              aria-readonly="true"
+            ></div>
+            <!-- Loader -->
+            <!-- <div *ngIf="isLoading" ></div> -->
+            <button
+              class="view-btn mt-1"
+              (click)="ocr()"
+              [disabled]="isLoading"
+              [ngClass]="{ 'disabled-btn': isLoading }"
+            >
+              OCR
+            </button>
+            <div style="position: absolute; top: 0; right: 13px">
+              <button class="copy-btn me-1" (click)="copyToClipboard()">
+                <svg
+                  *ngIf="!isCopied"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-clipboard"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"
+                  />
+                  <path
+                    d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"
+                  />
+                </svg>
+                <svg
+                  *ngIf="isCopied"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-check-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-15a7 7 0 1 1 0 14A7 7 0 0 1 8 1z"
+                  />
+                  <path
+                    d="M11.293 5.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L8 9.586l3.293-3.293z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-12 d-flex gap-1">
+            <button
+              *ngFor="let page of page_Number; let i = index"
+              class="view-btn m-1"
+              (click)="getTextOnPageNumber(page.pageNumber)"
+            >
+              {{ i + 1 }}
+            </button>
+          </div>
+        </div>
+        <div class="bg-light p-2 mb-2">
+          <h1 class="m-0" style="font-size: 1.2em; color: #2262a0">
+            Article Keywords
+          </h1>
+        </div>
+        <div class="row form-group">
+          <div
+            class="d-flex align-items-center"
+            [ngClass]="keywordFilterString ? 'col-sm-8' : 'col-sm-4'"
+          >
+            <label class="label mt-1" for="message">Keywords</label>
+          </div>
+          <div
+            class="d-flex align-items-center"
+            [ngClass]="keywordFilterString ? 'col-sm-4' : 'col-sm-8'"
+          >
+            <label class="label mt-1" for="message">Additional Keywords</label>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-4">
+            <select
+              class="input-text select"
+              size="8"
+              aria-label="Size 8 select example"
+              (change)="onKeywordFilterString($event)"
+              style="width: 100%; overflow-x: auto; white-space: nowrap"
+            >
+              <option
+                *ngFor="let keyword of keywords"
+                [value]="keyword.PrimarykeyID"
+                aria-readonly="true"
+              >
+                {{ keyword.keyword }}
+              </option>
+            </select>
+          </div>
+          <div
+            [ngClass]="
+              keywordFilterString ? 'col-sm-4 show-column' : 'col-sm-4 d-none'
+            "
+            class="transition-column"
+          >
+            <select
+              *ngIf="selectedPrimaryID !== 0"
+              class="input-text disabled-select select"
+              size="8"
+              aria-label="Size 8 select example"
+              style="width: 100%; overflow-x: auto; white-space: nowrap"
+              disabled
+            >
+              <option
+                *ngFor="let keyword of filterString"
+                [value]="keyword.keyid"
+              >
+                {{ keyword.Filter_String }}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <select
+              class="input-text select"
+              size="8"
+              aria-label="Size 8 select example"
+              style="width: 100%; overflow-x: auto; white-space: nowrap"
+            >
+              <option
+                *ngFor="let keyword of additionalKeyowrds"
+                [value]="keyword.keyword"
+                aria-readonly="true"
+              >
+                {{ keyword.keyword }}
+              </option>
+            </select>
+          </div>
+          
+        </div>
+        <div class="bg-light p-2 mb-2">
+          <h1 class="m-0" style="font-size: 1.2em; color: #2262a0">
+            Article Details
+          </h1>
+        </div>
+        
+       
+        <div class="row form-group">
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Page No.</label>
+            <input
+              id="Date"
+              class="input-text"
+              autocomplete="off"
+              type="text"
+              placeholder=""
+              required=""
+              [value]="article?.Page_Number || ''"
+              (input)="editPageNumber($event)"
+            />
+            <div class="row mt-2">
+              <div class="form-field col-sm-12">
+                <label class="label" for="name">Sector</label>
+                <select class="input-text" (change)="onSectorIdChange($event)" [ngModel]="article?.SectorID">
+                  <!-- <option *ngIf="article?.SectorName" [value]="article?.SectorID">
+                    {{ article?.SectorName }}
+                  </option> -->
+                  <option *ngFor="let s of sectorsArray" [value]="s.ID">
+                    {{ s?.Name }}
+                  </option>            
+                </select>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <label class="label" for="name">Total AVE (Rs.)</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  article?.ave || ""
+                }}
+              </label>
+            </div>
+            <div class="row mt-2">
+              <label class="label" for="name">Size</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  article?.area.toFixed(2) || ""
+                }}
+              </label>
+            </div>
+            <div class="row mt-2">
+              <label class="label" for="name">No. of pages</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  article?.Num_pages || ""
+                }}
+              </label>
+            </div>
+            <div class="row mt-2">
+              <label class="label" for="name">Date of publication</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  formatDate(article?.pubdate)
+                }}
+              </label>
+            </div>
+            <!-- <div class=" mt-2">
+              <div class="form-field col-sm-12 h-subcategory input-text">
+                <div *ngFor="let subCategory of subSectorArray" class="form-check d-flex">
+                  <input class="form-check-input me-1 mt-1" type="checkbox" [id]="subCategory.ID"     [checked]="subCategory.selected" 
+                  />
+                  <label class="label form-check-label" [for]="subCategory.ID"
+                    >{{ subCategory.Name }}</label
+                  >
+                </div>
+              </div>
+            </div> -->
+
+
+            <!-- <div class="row mt-2">
+              <div class="form-field col-sm-12">
+                <label class="label" for="name">Total AVE (Rs.)</label>
+                <label class="label infolabel mb-0" for="name">
+                  {{
+                    article?.ave || ""
+                  }}
+                </label>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="form-field col-sm-12">
+                <label class="label" for="name">No. of pages</label>
+                <label class="label infolabel mb-0" for="name">
+                  {{
+                    article?.Num_pages || ""
+                  }}
+                </label>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="form-field col-sm-12">
+                <label class="label" for="name">Date of publication</label>
+                <label class="label infolabel mb-0" for="name">
+                  {{
+                    formatDate(article?.pubdate)
+                  }}
+                </label>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="form-field col-sm-12">
+                <label class="label" for="name">Sector</label>
+                <label class="label infolabel mb-0" for="name">
+                  {{
+                    article?.SectorName || ""
+                  }}
+                </label>
+              </div>
+            </div> -->
+          </div>
+          <div class="form-field col-sm-4">
+            
+                <label class="label" for="message">Add Byline</label>
+              
+            <div class="row form-group">
+              <div class="col-sm-10">
+                <input
+                  id="Date"
+                  autocomplete="off"
+                  class="input-text"
+                  type="text"
+                  placeholder="Enter Byline"
+                  required=""
+                  [formControl]="BylineControl"
+                  [(ngModel)]="byline"
+                  (keydown)="onJourChange($event)"
+                />
+              </div>
+              <div class="col-sm-2 p-0 text-center">
+                <button class="border-0 me-3 p-1 bg-white" (click)="addNewJourName()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+              <div class="row form-group">
+                <div class="col-sm-12">
+                  <select
+                    class="input-text"
+                    size="14"
+                    aria-label="Size 8 select example"
+                    name="selectedJourId"
+                    [(ngModel)]="selectedJourId"
+                    #selectedArticleIdControl="ngModel"
+                    required=""
+                  >
+                    <option
+                      *ngFor="let j of filterJournalistarray"
+                      [value]="j.JourID"
+                      (dblclick)="onJournalistIdChange(j.JourID)"
+
+                    >
+                      {{ (j?.Fname || "") + (j?.Lname ? " " + j.Lname : "") }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            
+          </div>
+
+          <!-- Dropdown -->
+          <!-- <div class="row form-group">
+            <div class="col-sm-2 d-flex">
+              <label class="label mt-1" for="message">Byline</label>
+            </div>
+            
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-5">
+              <input
+                id="Date"
+                autocomplete="off"
+                class="input-text"
+                type="text"
+                placeholder="Enter Title"
+                required=""
+                [formControl]="titleControl"
+                (input)="filterTitle()"
+              />
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-12">
+              <select
+                class="input-text"
+                size="8"
+                aria-label="Size 8 select example"
+                name="selectedArticleId"
+                [(ngModel)]="selectedArticleId"
+                (change)="onArticleIdChange($event)"
+                #selectedArticleIdControl="ngModel"
+                required=""
+              >
+                <option
+                  *ngFor="let articleTitle of filterArticleTitles"
+                  [value]="articleTitle.ArticleID"
+                >
+                  {{ articleTitle?.ArticleTitle || "" }}
+                </option>
+              </select>
+            </div>
+          </div> -->
+
+          <!-- Dropdown -->
+
+          
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Byline</label>
+            <!-- <input class="input-text" type="text" [(ngModel)]="selectedJournalistName"     [attr.disabled]="!selectedJournalistName ? true : null" 
+            (keydown.enter)="saveJournalistEdit()"
+
+            > -->
+
+            <ul class="journalist mt-2" style="height: 235px; overflow: auto;">
+              <li *ngFor="let journalist of getJournalistNames()" class="d-flex justify-content-between">
+                <div>{{ journalist.Fname }} {{ journalist.Lname }}</div>
+                <div class="d-flex justify-content-end pe-2">
+                  <!-- <button (click)="editJournalist(journalist.journalistId, journalist.Fname, journalist.Lname)" class="p-0 m-0 border-0 text-success bg-white me-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                    </svg>
+                  </button> -->
+                  <button (click)="removeJournalist(journalist.journalistId)" class="p-0 m-0 border-0 text-danger bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            </ul>
+            
+            <!-- <ul class="journalist mt-2" style="height: 235px; overflow: auto;">
+              <li class="d-flex justify-content-between">
+                <div>Rohit</div>
+                <div class="d-flex justify-content-end pe-2">
+                  <button class="p-0 m-0 border-0 text-success bg-white me-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                    </svg>
+                  </button>
+                  <button class="p-0 m-0 border-0 text-danger bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            </ul> -->
+          </div>
+        </div>
+        <!-- <div class="row form-group">
+          <div class="col-4">
+            <div class="form-field col-sm-12">
+              <label class="label" for="name">Total AVE (Rs.)</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  article?.ave || ""
+                }}
+              </label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-field col-sm-12">
+              <label class="label" for="name">No. of pages</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  article?.Num_pages || ""
+                }}
+              </label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-field col-sm-12">
+              <label class="label" for="name">Date of publication</label>
+              <label class="label infolabel mb-0" for="name">
+                {{
+                  formatDate(article?.pubdate)
+                }}
+              </label>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="bg-light p-2 mb-2">
+          <h1 class="m-0" style="font-size: 1.2em; color: #2262a0">
+            Article Image Details
+          </h1>
+        </div>
+        <div class="row form-group">
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Page Name</label>
+            <!-- <label class="label infolabel mb-0" for="name">{{article?.pagename || ''}}</label> -->
+            <input
+              id="Date"
+              class="input-text"
+              autocomplete="off"
+              type="text"
+              placeholder=""
+              required=""
+              [value]="article?.pagename || ''"
+              (input)="onPageNameChange($event)"
+            />
+          </div>
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Time Taken(m)</label>
+            <label class="label infolabel mb-0" for="name">{{
+              timeTaken
+            }}</label>
+          </div>
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Date Time</label>
+            <label class="label infolabel mb-0" for="name">{{
+              formatDateAndTime(article?.Date_Time_Acqured || "")
+            }}</label>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Last Updated</label>
+            <label class="label infolabel mb-0" for="name">{{
+              formatDateAndTime(article?.lastupdated || "")
+            }}</label>
+          </div>
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Last Edit Date Time</label>
+            <label class="label infolabel mb-0" for="name">{{
+              formatDateAndTime(article?.sq_allocatedDateTime || "")
+            }}</label>
+          </div>
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Processed By</label>
+            <label class="label infolabel mb-0" for="name">{{
+              article?.UserID || ""
+            }}</label>
+          </div>
+          <div class="form-field col-sm-4">
+            <label class="label" for="name">Modified By</label>
+            <label class="label infolabel mb-0" for="name">{{
+              article?.lastmodified_userid || ""
+            }}</label>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="form-check form-check-inline d-flex">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="inlineCheckbox1"
+              value="option1"
+              [checked]="article?.IsPremium === 'Y'"
+              (change)="editCheckBox($event)"
+            />
+            <label class="label form-check-label" for="inlineCheckbox1"
+              >Premium</label
+            >
+          </div>
+          <div class="form-check form-check-inline d-flex">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="inlineCheckbox2"
+              value="option2"
+              [checked]="article?.IsPhoto === 'Y'"
+              (change)="editCheckBox($event)"
+            />
+            <label class="label form-check-label" for="inlineCheckbox2"
+              >Includes Photo</label
+            >
+          </div>
+          <div class="form-check form-check-inline d-flex">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="inlineCheckbox3"
+              value="option2"
+              [checked]="article?.IsColor === 'Y'"
+              (change)="editCheckBox($event)"
+            />
+            <label class="label form-check-label" for="inlineCheckbox3"
+              >Color</label
+            >
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-12 d-flex justify-content-end">
+            <input
+              class="submit-btn text-center"
+              value="Save"
+              (click)="openModal()"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Right Panel End --->
+  </div>
+</div>
+
+<!-- Add Continuation Modal Start -->
+<!-- <div
+  class="modal fade"
+  id="addcontinuation"
+  tabindex="-1"
+  aria-labelledby="addcontinuation"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 p-2">
+            <form class="contact-form">
+              <div class="d-flex justify-content-start">
+                <div class="flex-fill">
+                  <input
+                    id="Date"
+                    class="input-text bg-white"
+                    type="text"
+                    placeholder="Page No."
+                    required=""
+                  />
+                </div>
+                <div class="flex-fill ml-3">
+                  <input class="submit-btn w-100" type="submit" value="Go" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 p-2">
+            <div
+              class="d-flex flex-row justify-content-between align-items-stretch"
+            >
+              <div class="d-flex justify-content-start flex-fill">
+                <a href="#" class="list-group-item">
+                  From Reddit to Shein - Top US IPOs to look out for in 2024
+                </a>
+              </div>
+              <div class="d-flex justify-content-end align-items-start">
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-add"></i>
+                </a>
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-remove"></i>
+                </a>
+              </div>
+            </div>
+            <div
+              class="d-flex flex-row justify-content-between align-items-stretch"
+            >
+              <div class="d-flex justify-content-start flex-fill">
+                <a href="#" class="list-group-item">
+                  From Reddit to Shein - Top US IPOs to look out for in 2024
+                </a>
+              </div>
+              <div class="d-flex justify-content-end align-items-start">
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-add"></i>
+                </a>
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-remove"></i>
+                </a>
+              </div>
+            </div>
+            <div
+              class="d-flex flex-row justify-content-between align-items-stretch"
+            >
+              <div class="d-flex justify-content-start flex-fill">
+                <a href="#" class="list-group-item">
+                  From Reddit to Shein - Top US IPOs to look out for in 2024
+                </a>
+              </div>
+              <div class="d-flex justify-content-end align-items-start">
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-add"></i>
+                </a>
+                <a href="#" class="list-group-item">
+                  <i class="icofont-duotone icofont-file-remove"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- Add Continuation Modal End -->
+
+<!-- Confirmation Modal Start -->
+<div
+  class="modal fade"
+  id="confirmation"
+  tabindex="-1"
+  aria-labelledby="confirmation"
+  aria-hidden="true"
+  [ngClass]="{ show: showModal }"
+  [style.display]="showModal ? 'block' : 'none'"
+  class="custom-modal"
+>
+  <div class="modal-dialog custom-modal-dialog w-100">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Save</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to save this article?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="closeModal()"
+        >
+          No
+        </button>
+        <button type="button" class="btn btn-outline-success" (click)="save()">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="confirmation"
+  tabindex="-1"
+  aria-labelledby="confirmation"
+  aria-hidden="true"
+  [ngClass]="{ show: showRemoveModal }"
+  [style.display]="showRemoveModal ? 'block' : 'none'"
+  class="custom-modal"
+>
+  <div class="modal-dialog custom-modal-dialog w-100">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to remove this Bylin?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="closeModal()"
+        >
+          No
+        </button>
+        <button type="button" class="btn btn-outline-success" (click)="remove()">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Confirmation Modal End -->
+
+
+<!-- Image Cropper -->
+
+<div
+  class="modal fade"
+  id="viewimage"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static" 
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Crop Image</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="resetCropper()"
+        ></button>
+      </div>
+        <div class="modal-body position-relative">
+          <div *ngIf="isModalLoading" class="loader-overlay"></div>
+
+        <!-- Crop Container -->
+        <div *ngIf="!isLoading" class="crop-container d-flex justify-content-center align-items-center">
+          <img
+            #imageToCrop
+            id="imageElement"
+            [src]="imageSrc" 
+            [ngStyle]="getTransformStyle()" 
+            [attr.data-key]="imageKey" 
+            class="img-fluid crop-image"
+          />
+        </div>
+
+        <!-- Cropped Image Preview -->
+        <!-- <div *ngIf="isPreviewImage && !isLoading" class="cropped-preview mt-3 crop-container d-flex justify-content-center align-items-center">
+          <img
+            #imageToCrop
+            [src]="croppedImage"
+            alt="Cropped Preview"
+            class="img-thumbnail crop-image"
+          />
+        </div> -->
+      </div>
+      
+      <div class="modal-footer">
+
+        <button
+        *ngIf="isCropEnabled"
+        type="button"
+        class="btn btn-secondary"
+        (click)="zoomIn()"
+      >
+        +
+      </button>
+    
+      <!-- Zoom-Out Button -->
+      <button
+      *ngIf="isCropEnabled"
+        type="button"
+        class="btn btn-secondary"
+        (click)="zoomOut()"
+      >
+        -
+      </button>
+    
+      <button
+          type="button"
+          class="btn btn-warning"
+          *ngIf="isCropEnabled"
+          (click)="eraseSelectedArea()"
+        >
+          remove
+        </button>
+        
+        <!-- Hidden File Input -->
+        <input
+          type="file"
+          id="imageUpload"
+          style="display: none;"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+
+        <!-- Upload Button -->
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="triggerUploadConfirmation()"
+          *ngIf="!isCropEnabled"
+          >
+          Upload
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="enableCropping()"
+        >
+          {{ isPreviewMode ? 'Preview' : 'Crop' }}
+        </button>
+        <button *ngIf="isCropEnabled" type="button" class="btn btn-danger" (click)="cancelCropping()">
+          X
+        </button>
+      
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="triggerSaveConfirmation()"
+          *ngIf="isSaveImage"
+          data-bs-dismiss="modal"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">
+          {{ modalType === 'success' ? 'Success' : 'Confirm Action' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancelConfirmation()"></button>
+      </div>
+      <div class="modal-body">
+        {{ confirmationMessage }}
+      </div>
+      <div class="modal-footer">
+        <!-- Show buttons only for confirmation -->
+        <button *ngIf="modalType === 'confirm'" type="button" class="btn btn-secondary" data-bs-dismiss="modal"  (click)="cancelConfirmation()">
+          Cancel
+        </button>
+        <button *ngIf="modalType === 'confirm'" type="button" class="btn btn-danger" (click)="confirmAction()" data-bs-dismiss="modal">
+          Yes, Proceed
+        </button>
+        <!-- Show only close button for success -->
+        <button *ngIf="modalType === 'success'" type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Image Cropper -->
+

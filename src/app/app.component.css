@@ -1,0 +1,383 @@
+/* .input-text {
+    width: 100%; 
+    box-sizing: border-box; 
+  }
+   */
+   .readonly-checkbox {
+    pointer-events: none; /* Prevents clicking */
+    cursor: not-allowed; /* Shows a not-allowed cursor */
+  }
+  .text-danger{
+    color: red;
+  }
+  
+/* Basic styling for the div to look like a textarea */
+.input-text1 {
+  width: 100%;
+  box-sizing: border-box;
+  /* line-height: 1.5; */
+  background: #fafafa;
+  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.08); /* Subtle inner shadow */
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  color: #666;
+  border: none;
+  display: block;
+  min-height: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 3px;
+  white-space: pre-wrap; 
+}
+
+.input-text1:focus {
+  outline: none;
+}
+
+/* Highlighted text styles */
+.highlight-text {
+  white-space: pre-wrap;
+  background-color: transparent; /* Transparent background */
+}
+
+#highlightedText span.highlight-yellow {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+span.highlight-blue {
+  background-color: rgb(175, 175, 234);
+  /* color: white; Optional: to make the text readable */
+  font-weight: bold;
+}
+
+.disabled-select {
+  color: #dcdcdce9; /* Lighter text color for disabled state */
+  background-color: #f5f5f5; /* Light gray background */
+  opacity: 0.6; /* Lightens the whole element including the background and text */
+}
+
+.disabled-select:disabled {
+  background-color: #f0f0f0; /* Slightly darker background for disabled state */
+  color: #e0e0e0; /* Even lighter gray text when disabled */
+  opacity: 0.5; /* Even lighter, faded effect when truly disabled */
+}
+
+
+.position-relative {
+  position: relative; /* Allow absolute positioning of the loader */
+}
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 5px solid #fff; /* Custom border color */
+  animation: rotate 1s linear infinite;
+}
+
+.loader::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0; /* Full coverage */
+  border-radius: 50%;
+  border: 5px solid rgba(104, 176, 234, 0.8); /* Lighter border for a soft look */
+  animation: prixClipFix 2s ease-in-out infinite; /* Smooth easing for the clip animation */
+}
+
+@keyframes rotate {
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes prixClipFix {
+  0%   { clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0); }
+  25%  { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0); }
+  50%  { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%); }
+  75%  { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%); }
+  100% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0); }
+}
+
+.loaderOnPage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 6px solid #f3f3f3; /* Light grey background */
+  border-top: 6px solid #3498db; /* Blue color for the spinning section */
+  border-radius: 50%; /* Round shape */
+  width: 60px; /* Larger size for more visible loader */
+  height: 60px; /* Larger size */
+  animation: spin 1s linear infinite; /* Infinite spinning animation */
+  z-index: 9999; /* Ensures loader is on top of other content */
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.loaderOnPage.active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8); /* Light overlay */
+  z-index: -1; /* Keeps the spinner on top of the overlay */
+}
+
+.transition-column {
+  transition: all 0.3s ease; /* Smooth transition for width, opacity, etc. */
+}
+
+.show-column {
+  opacity: 1;
+  visibility: visible;
+  max-height: 1000px; /* Allow maximum height when shown */
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.select {
+    height: 150px; /* Set a fixed height for select elements */
+    display: block;
+    width: 100%;
+    background-color: #fafafa;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: #666;
+    border-radius: 5px;
+    border: none;
+    overflow-y: auto; /* Make sure overflow is scrollable if options exceed height */
+    -webkit-box-shadow: inset 0px 1px 3px 0px rgb(0 0 0 / 8%);
+    -moz-box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0px 1px 3px 0px rgb(0 0 0 / 8%);
+    transition: all 0.4s ease;
+}
+
+
+.disabled-btn {
+  cursor: not-allowed;
+  opacity: 0.5; /* Lighten the button when it is disabled */
+  background-color: #879edc; /* Optional: Change background color when disabled */
+}
+
+/* Add smooth fade-in and fade-out effects */
+/* Custom Modal Styles */
+.custom-modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  
+}
+
+.custom-modal-dialog {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+.custom-modal .modal.fade {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050; /* Ensure modal stays on top */
+}
+
+.custom-modal .modal.show {
+  opacity: 1;
+}
+
+.custom-modal .modal-dialog {
+  max-width: 400px; /* Set a smaller width */
+  margin: 0 auto; /* Center modal horizontally */
+}
+
+.custom-modal .modal-content {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.custom-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.custom-modal .modal-header .close {
+  font-size: 1.5rem;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-modal .modal-header .close:hover {
+  color: #333;
+}
+
+.custom-modal .modal-body {
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+  padding: 15px;
+}
+
+.custom-modal .modal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-top: 1px solid #f1f1f1;
+}
+
+.custom-modal .modal-footer button {
+  font-size: 1rem;
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+
+.custom-modal .modal-footer .btn-outline-danger {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.custom-modal .modal-footer .btn-outline-success {
+  border: 1px solid #28a745;
+  color: #28a745;
+}
+
+.custom-modal .modal-footer button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+  color: #fff;
+}
+
+.journalist{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.journalist li{
+  display: block;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+
+
+.crop-container {
+  width: 100%;
+  height: calc(100vh - 200px); /* Adjust to fit modal height, subtract header/footer */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.crop-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Ensures the image maintains aspect ratio */
+}
+
+/* .cropped-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+} */
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.h-subcategory{
+  height: 181px;
+  overflow: auto;
+}
+
+.loader-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; /* Size of the circle */
+  height: 80px; /* Size of the circle */
+  border: 6px dotted transparent; /* Dotted border with transparent color */
+  border-top: 6px dotted #3498db; /* Dotted blue top border */
+  border-radius: 50%; /* Makes it a circle */
+  animation: rotate 1.5s linear infinite; /* Rotate animation */
+  z-index: 9999; /* Ensures it's on top */
+}
+
+@keyframes rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+
+
+/* Hide the dashed grid lines */
+/* .cropper-dashed {
+  display: none !important;
+}
+
+/* Hide the semi-transparent crop box view */
+/* .cropper-view-box {
+  border: none !important;
+} */
+
+/* Optional: Hide the crosshair in the middle */
+/* .cropper-center {
+  display: none !important;
+}  */
+
+/* .cropper-line {
+  background-color: black !important;
+  width: 3px !important;
+}
+.cropper-point {
+  background-color: black !important;
+  width: 6px !important;
+  height: 6px !important;
+} */
+.custom-btn {
+  font-size: 10px; /* Small text */
+  padding: 3px 6px; /* Small padding */
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Space between icon and text */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.custom-btn svg {
+  width: 12px; /* Small icons */
+  height: 12px;
+}
