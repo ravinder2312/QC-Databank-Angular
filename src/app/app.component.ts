@@ -146,7 +146,7 @@ export class AppComponent {
       PublicationTitle: '',
       Edition: '',
     };
-    // this.checkUser();
+    this.checkUser();
     this.selectedDate = this.formatDate(new Date());
     this.getPublications();
     this.searchTerms
