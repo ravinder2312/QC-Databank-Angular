@@ -146,7 +146,7 @@ export class AppComponent {
       PublicationTitle: '',
       Edition: '',
     };
-    this.checkUser();
+    // this.checkUser();
     this.selectedDate = this.formatDate(new Date());
     this.getPublications();
     this.searchTerms
@@ -1318,7 +1318,7 @@ export class AppComponent {
   async save() {
     this.isLoading = true;
     try {
-      await this.checkUser();
+      // await this.checkUser();
       console.log(this.UserID);
       if (
         this.UserID.trim() !== '' &&
@@ -1364,7 +1364,7 @@ export class AppComponent {
     this.isLoading = true;
     try {
       // Wait for UserID to be fetched
-      await this.checkUser();
+      // await this.checkUser();
       console.log(this.UserID);
 
       // Ensure the UserID is valid
