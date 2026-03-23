@@ -139,6 +139,7 @@ export class AppComponent {
   pageNumber: string = '';
   imageURL: string = '';
   selectedSectorId: number = 0;
+  mode: string = 'manual'; // default
 
   ngOnInit() {
     this.selectedPublication = {
@@ -317,6 +318,7 @@ export class AppComponent {
       this.selectedArticleId = '';
       this.selectedPageNumber = '';
       if (this.selectedPublication.PublicationTitle !== '') {
+        this.mode="manual";
         this.getTotalArticles(this.selectedDate);
       }
     }
@@ -340,7 +342,16 @@ export class AppComponent {
     this.selectedPageNumber = '';
     this.selectedPublication = selectedPublication;
     this.getTotalNoOfArticles = true;
+    this.mode="manual";
     this.getTotalArticles(this.selectedDate);
+  }
+
+  onToggleChange() {
+    if (this.selectedDate && this.selectedPublication) {
+      this.getTotalArticles(this.selectedDate);
+          this.showdetails = false;
+
+    }
   }
 
   getTotalArticles(pubdate: string) {
@@ -351,7 +362,7 @@ export class AppComponent {
 
     try {
       this.articleService
-        .getTotalArticles(pubdate, PublicationTitle, Edition)
+        .getTotalArticles(pubdate, PublicationTitle, Edition, this.mode)
         .subscribe(
           (result) => {
             // Handle the successful response
@@ -433,7 +444,7 @@ export class AppComponent {
 
     try {
       this.articleService
-        .getArticlesByPageNumber(pubdate, PublicationTitle, Edition, pageNumber)
+        .getArticlesByPageNumber(pubdate, PublicationTitle, Edition, pageNumber, this.mode)
         .subscribe(
           (result) => {
             // Handle the successful response
@@ -664,9 +675,11 @@ export class AppComponent {
                     this.article.start_acq_time,
                     this.article.end_acq_time
                   );
-                  this.highlightedText = this.highlightExistingKeywords(
-                    this.article.full_text
-                  );
+                  if (this.article.full_text && this.article.full_text.trim() !== '') {
+                    this.highlightedText = this.highlightExistingKeywords(this.article.full_text);
+                  } else {
+                    this.highlightedText = '';
+                  }
                   this.selectedPrimaryID = 0;
                   // this.articleService
                   //   .getSubsectorByID(this.article.SectorID)
@@ -2397,6 +2410,8 @@ export class AppComponent {
     window.location.href = mailtoLink;
   }
 
+  
+
   cancelCropping() {
     this.isModalLoading = true; // Show loader
     console.log('Cancelling cropping...');
@@ -2499,5 +2514,16 @@ export class AppComponent {
         height: newHeight,
       });
     }
+  }
+
+  copyArticleId(id: string) {
+    if (!id) return;
+
+    navigator.clipboard.writeText(id);
+    this.isCopied = true;
+
+    setTimeout(() => {
+      this.isCopied = false;
+    }, 2000);
   }
 }

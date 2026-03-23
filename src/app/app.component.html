@@ -60,6 +60,71 @@
             </div>
           </div>
           <div class="row form-group">
+  <div class="col-sm-2 d-flex align-items-center">
+    <label class="label">Mode</label>
+  </div>
+
+  <div class="col-sm-10 d-flex gap-4 align-items-center">
+    <div class="btn-toggle">
+
+        <input type="radio" name="filter" id="tracked" checked value="manual"
+        [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}"
+        (change)="onToggleChange()"
+        >
+        <label for="tracked" >Manually tracked</label>
+
+        <input type="radio" name="filter" id="Issuebased" value="issuebased" [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}" (change)="onToggleChange()"
+        >
+        <label for="Issuebased" >Issuebased</label>
+
+        <input type="radio" name="filter" id="all" value="all" [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}"
+        (change)="onToggleChange()">
+        <label for="all" >All</label>
+
+      </div>
+    <!-- Manual Tracking -->
+    <!-- <label class="label">
+      <input
+        type="radio"
+        name="mode"
+        value="manual"
+        [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}"
+        (change)="onToggleChange()"
+      />
+      Manual Tracking
+    </label>
+
+    <label class="label text-muted">
+      <input
+        type="radio"
+        name="mode"
+        value="issuebased"
+        [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}"
+        disabled
+      />
+      Issue Based
+    </label>
+
+    <label class="label">
+      <input
+        type="radio"
+        name="mode"
+        value="all"
+        [(ngModel)]="mode"
+        [ngModelOptions]="{standalone: true}"
+        (change)="onToggleChange()"
+      />
+      All
+    </label> -->
+
+  </div>
+</div>
+          <div class="row form-group">
             <div class="col-sm-2 d-flex align-items-center">
               <label class="label" for="message">No. of Articles</label>
             </div>
@@ -723,7 +788,53 @@
               article?.lastmodified_userid || ""
             }}</label>
           </div>
+          <div class="form-field col-sm-4" style="position: relative;">
+  <label class="label">Article ID</label>
+
+  <label class="label infolabel mb-0">
+    {{ article?.ArticleID || "" }}
+  </label>
+
+  <div style="position: absolute; top: 0; right: 13px">
+    <button class="copy-btn me-1" (click)="copyArticleId(article?.ArticleID)">
+      <svg
+        *ngIf="!isCopied"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-clipboard"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"
+        />
+        <path
+          d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"
+        />
+      </svg>
+
+      <svg
+        *ngIf="isCopied"
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-check-circle"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-15a7 7 0 1 1 0 14A7 7 0 0 1 8 1z"
+        />
+        <path
+          d="M11.293 5.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L8 9.586l3.293-3.293z"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
         </div>
+        
         <div class="d-flex">
           <div class="form-check form-check-inline d-flex">
             <input

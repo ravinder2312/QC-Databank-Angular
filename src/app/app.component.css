@@ -381,3 +381,39 @@ span.highlight-blue {
   width: 12px; /* Small icons */
   height: 12px;
 }
+.btn-toggle{
+    display:inline-flex;
+    border:1px solid #dee2e6;
+    border-radius:6px;
+    overflow:hidden;
+    font-family: inherit;
+}
+
+.btn-toggle input{
+    display:none;
+}
+
+.btn-toggle label{
+    padding:6px 18px;
+    margin:0;
+    cursor:pointer;
+    background:#f8f9fa;
+    border-right:1px solid #dee2e6;
+    font-size: 12px;
+}
+
+.btn-toggle label:last-child{
+    border-right:none;
+}
+
+.btn-toggle input:checked + label{
+    background:#064497;
+    color:#fff;
+}
+
+.btn-toggle input:disabled + label{
+    background:#e9ecef;
+    color:#6c757d;
+    cursor:not-allowed;
+    opacity:0.7;
+}

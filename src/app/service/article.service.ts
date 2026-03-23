@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ArticleService {
-  // private apiUrl = 'http://localhost:4000';
+  // private apiUrl = 'http://localhost:3800';
   // private apiUrl = 'http://databank.irmplservices.com:3800';
   private apiUrl = 'https://databank.irmplservices.com/qc-module/';
 
@@ -26,12 +26,14 @@ export class ArticleService {
   getTotalArticles(
     pubdate: string,
     pub: string,
-    edition: string
+    edition: string,
+    mode: string
   ): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/getArticles`, {
       pubdate,
       pub,
       edition,
+      mode
     });
   }
 
@@ -39,13 +41,15 @@ export class ArticleService {
     pubdate: string,
     pub: string,
     edition: string,
-    pageNumber: string
+    pageNumber: string,
+    mode: string
   ): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/getArticlesByPageNo`, {
       pubdate,
       pub,
       edition,
       pageNumber,
+      mode
     });
   }
 
