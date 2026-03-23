@@ -8,4 +8,15 @@
       }
     }
   }
+
+{
+    "/api": {
+      "target": "https://myimpact.in",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
+  }
   
