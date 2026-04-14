@@ -22,7 +22,10 @@
     "@angular/router": "^18.2.0",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "@ng-select/ng-select": "^13.7.0",
+<<<<<<< HEAD
     "@popperjs/core": "^2.11.8",
+=======
+>>>>>>> 850ebb07c1c37c2bb9658509fccfc632036cbb29
     "bootstrap": "^5.3.3",
     "cropperjs": "^1.6.2",
     "rxjs": "~7.8.0",

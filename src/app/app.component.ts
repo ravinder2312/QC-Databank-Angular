@@ -764,7 +764,6 @@ export class AppComponent {
     }));
   }
 
-
   onJournalistIdChange(journalistId: number): void {
     // console.log('Selected JournalistID:', journalistId);
     // const selectElement = event.target as HTMLSelectElement;
